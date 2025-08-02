@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Todo App</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="sidebar">
+      <h2>Projects</h2>
+      <ul class="project-list"></ul>
+      <div class="add-project-container">
+        <div class="input-wrapper">
+            <input type="text" id="new-project-input" placeholder="Project name" required>
+            <button type="button" id="add-project-btn">+</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+        <div class="top">
+            <div class="top-inner">
+                <h2 class="title">Todos</h2>
+                <div class="inputs">
+                    <input type="text" id="todo_name" placeholder="Todo" />
+                    <input type="date" id="date" />
+                    <select id="priority">
+                        <option value="" selected disabled>Priority</option>
+                        <option value="Low">Low</option>
+                        <option value="Medium">Medium</option>
+                        <option value="High">High</option>
+                    </select>
+                    <button id="add_todo">Add</button>
+                </div>
+            </div>
+        </div>
+        <div class="bottom">
+            <div class="description">
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+</body>
+</html>

@@ -10,7 +10,7 @@ body {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  height: 100vh;
+  height: 100dvh;
   margin: 0;
   font-family: sans-serif;
   display: flex;
@@ -197,6 +197,10 @@ body {
 }
 
 @media (max-width: 768px) {
+  html, body {
+  overflow-x: hidden;
+  }
+
   #top {
     flex-direction: column;
     align-items: center;

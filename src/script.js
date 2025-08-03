@@ -20,11 +20,6 @@ async function getWeather(location) {
 }
 
 function convertUnits(array, unit) {
-  if (unit !== 'C' && unit !== 'F') {
-    console.error('Unit must be "C" or "F"');
-    return array;
-  }
-
   return array.map(day => {
     const newDay = { ...day }; 
 
@@ -76,7 +71,6 @@ function renderWeatherInfo(week){
       rest.innerHTML='';
       week.slice(1).forEach(day => {
         getSvgIcon(day.icon).then( oldicon=>{
-          console.log(oldicon)
           const newicon=oldicon.replace(/<style[\s\S]*?<\/style>/gi, '');
           const dayHTML  = `
             <div class="weather-card">
@@ -93,7 +87,6 @@ function renderWeatherInfo(week){
           `;
           rest.innerHTML += dayHTML;
 })})
-    console.log(week)
 };
 
 toggle.addEventListener('change', () => {

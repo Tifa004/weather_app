@@ -1,451 +1,116 @@
-// Entry point CSS import
 import "./styles.css";
-import { format } from 'date-fns';
 
-// ---------------- Storage Module ----------------
-const storage = (function () {
-  function saveProjects(projects) {
-    localStorage.setItem('projects', JSON.stringify(projects));
-  }
+const search = document.querySelector('#search_bar');
+const today = document.getElementById('today')
+const rest=document.getElementById('week')
+const toggle=document.querySelector('.convert');
 
-  function loadProjects() {
-    const stored = localStorage.getItem('projects');
-    if (!stored) return;
+let currentUnit = 'F';
 
-    const parsed = JSON.parse(stored);
-    for (const name in parsed) {
-      const project = parsed[name];
-      createProject.create(name, project.description, project.list);
-    }
-  }
-
-  function removeAll() {
-    localStorage.clear();
-  }
-
-  return { saveProjects, loadProjects, removeAll };
-})();
-
-// ---------------- Project Factory ----------------
-const createProject = (function () {
-  let projects = {};
-
-  function create(name, description = `What's this about?`, list = {}) {
-    projects[name] = { description, list };
-    storage.saveProjects(projects);
-  }
-
-  function updateKey(oldKey, newKey) {
-    if (projects[oldKey] && !projects[newKey]) {
-      projects[newKey] = projects[oldKey];
-      delete projects[oldKey];
-      storage.saveProjects(projects);
-      return true;
-    }
-    return false;
-  }
-
-  function updateTodoKey(project, oldKey, newKey) {
-    if (projects[project].list[oldKey] && !projects[project].list[newKey]) {
-      projects[project].list[newKey] = projects[project].list[oldKey];
-      delete projects[project].list[oldKey];
-      storage.saveProjects(projects);
-      return true;
-    }
-    return false;
-  }
-
-  function isValidDate(date) {
-    return !isNaN(new Date(date).getTime());
-  }
-
-  function addTodo(project, name, dueDate, priority, notes) {
-    if (projects[project].list[name]) return false;
-
-    projects[project].list[name] = {
-      dueDate: isValidDate(dueDate) ? format(new Date(dueDate), 'MMMM do, yyyy') : '',
-      notes,
-      priority,
-      done: false
-    };
-    storage.saveProjects(projects);
-    return true;
-  }
-
-  function updateProperty(project, propertyname, newInfo) {
-    projects[project][propertyname] = newInfo;
-    storage.saveProjects(projects);
-  }
-
-  function updateTodo(project, todo, propertyname, data) {
-    projects[project].list[todo][propertyname] = data;
-    storage.saveProjects(projects);
-  }
-
-  function deleteProject(project) {
-    delete projects[project];
-    if (Object.keys(projects).length === 0) {
-      create('Default', `What's this about?`);
-    }
-    storage.saveProjects(projects);
-  }
-
-  function deleteTodo(project, todo) {
-    delete projects[project].list[todo];
-    storage.saveProjects(projects);
-  }
-
-  function getProjects() {
-    return { ...projects };
-  }
-
-  return {
-    create,
-    updateKey,
-    updateTodoKey,
-    addTodo,
-    updateProperty,
-    deleteProject,
-    deleteTodo,
-    getProjects,
-    updateTodo
-  };
-})();
-
-// ---------------- DOM References ----------------
-const projectList       = document.querySelector('.project-list');
-const newProjectInput   = document.getElementById('new-project-input');
-const addProjectBtn     = document.getElementById('add-project-btn');
-const contentSection    = document.querySelector('.description');
-const titleHeader       = document.querySelector('.title');
-const todoTitleInput    = document.getElementById('todo_name');
-const todoDateInput     = document.getElementById('date');
-const todoPriorityInput = document.getElementById('priority');
-const addTodoBtn        = document.getElementById('add_todo');
-
-// ---------------- Load and Initialize ----------------
-storage.loadProjects();
-
-if (Object.keys(createProject.getProjects()).length === 0) {
-  createProject.create('Default', 'What`s this about?');
+// const svgs ={
+//   'clear-day':'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 57.47 57.47"><defs><style>.cls-1,.cls-2{fill:none;stroke:#000;stroke-miterlimit:10;stroke-width:3px;}.cls-1{stroke-linecap:round;}</style></defs><title>clear-dayAsset 68</title><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><line class="cls-1" x1="8.55" y1="28.73" x2="1.5" y2="28.73"/><line class="cls-1" x1="14.15" y1="42.85" x2="9.07" y2="47.75"/><line class="cls-1" x1="14.75" y1="14.28" x2="9.82" y2="9.24"/><line class="cls-1" x1="10.03" y1="36.46" x2="3.51" y2="39.14"/><line class="cls-1" x1="21.11" y1="10.12" x2="18.39" y2="3.62"/><line class="cls-1" x1="20.57" y1="47.38" x2="17.75" y2="53.85"/><line class="cls-1" x1="10.25" y1="20.74" x2="3.78" y2="17.95"/><path class="cls-2" d="M28.7,43.71h0a14.86,14.86,0,1,0,0-29.71h.05a14.86,14.86,0,1,0,0,29.71H28.7Z"/><line class="cls-1" x1="48.92" y1="28.73" x2="55.97" y2="28.73"/><line class="cls-1" x1="28.73" y1="8.55" x2="28.73" y2="1.5"/><line class="cls-1" x1="28.73" y1="48.92" x2="28.73" y2="55.97"/><line class="cls-1" x1="43.32" y1="42.85" x2="48.39" y2="47.75"/><line class="cls-1" x1="42.72" y1="14.28" x2="47.65" y2="9.24"/><line class="cls-1" x1="47.44" y1="36.46" x2="53.96" y2="39.14"/><line class="cls-1" x1="36.36" y1="10.12" x2="39.08" y2="3.62"/><line class="cls-1" x1="36.89" y1="47.38" x2="39.72" y2="53.85"/><line class="cls-1" x1="47.21" y1="20.74" x2="53.69" y2="17.95"/></g></g></svg>',
+//   'clear-night':'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 39.11 40.96"><defs><style>.cls-1{fill:none;stroke:#000;stroke-miterlimit:10;stroke-width:3px;}</style></defs><title>clear-nightAsset 69</title><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><path class="cls-1" d="M30.56,34.05h0a13.57,13.57,0,1,1,0-27.13,13.79,13.79,0,0,1,3.71.52,19,19,0,1,0-13.79,32h0a18.94,18.94,0,0,0,13.78-5.94A14.15,14.15,0,0,1,30.56,34.05Z"/></g></g></svg>',
+//   'cloudy':'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 98.7 34.32"><defs><style>.cls-1{fill:none;stroke:#000;stroke-miterlimit:10;stroke-width:3px;}</style></defs><title>cloudyAsset 72</title><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><path class="cls-1" d="M59.26,31.64H97.15a15.06,15.06,0,0,0-12.1-14.06,15.87,15.87,0,0,0-7.62.47c-1.76.56-2.5.2-3.26-1.52a15.1,15.1,0,0,0-14.88-9.1A14.82,14.82,0,0,0,52,9.93c-1.62,1.06-2.55.86-3.63-.79a16.47,16.47,0,0,0-30.13,6.18c-.53,3.41-1.13,3.15-3.77,3.45-12.16,0-13,12.67-12.95,12.87H39.61"/><path d="M49.24,34.32a2.64,2.64,0,0,1-2.7-2.73,2.71,2.71,0,0,1,5.41,0A2.65,2.65,0,0,1,49.24,34.32Z"/></g></g></svg>',
+//   'fog':
+// }
+async function getWeather(location) {
+  const response = await fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?unitGroup=us&key=YLMAK26BJ2F3CVEXDE5FDU6U5&contentType=json`,{mode:'cors'})
+  const searchData = await response.json();
+  return searchData.days
 }
 
-if (todoDateInput) {
-  todoDateInput.min = new Date().toISOString().split("T")[0];
-}
+function convertUnits(array, unit) {
+  if (unit !== 'C' && unit !== 'F') {
+    console.error('Unit must be "C" or "F"');
+    return array;
+  }
 
-// ---------------- Helpers ----------------
-function makeDescEditable(descEl, key) {
-  descEl.addEventListener('click', () => {
-    // Create textarea and copy styles/sizing
-    const textarea = document.createElement('textarea');
-    textarea.value = descEl.textContent.trim();
+  return array.map(day => {
+    const newDay = { ...day }; 
 
-    // Match styles to prevent layout shift
-    const style = window.getComputedStyle(descEl);
-    textarea.style.width = style.width;
-    textarea.style.height = style.height;
-    textarea.style.fontSize = style.fontSize;
-    textarea.style.fontFamily = style.fontFamily;
-    textarea.style.lineHeight = style.lineHeight;
-    textarea.style.padding = style.padding;
-    textarea.style.borderRadius = style.borderRadius;
-    textarea.style.border = style.border;
-    textarea.style.resize = 'none';
-    textarea.style.boxSizing = 'border-box';
-
-    // Replace descEl with textarea and focus
-    descEl.replaceWith(textarea);
-    textarea.focus();
-
-    function saveAndRender() {
-      const newDesc = textarea.value.trim() || `What's this about?`;
-
-      // Replace textarea back with descEl
-      descEl.textContent = newDesc;
-      textarea.replaceWith(descEl);
-
-      // Update storage/project description
-      createProject.updateProperty(key, 'description', newDesc);
+    if (unit === 'C') {
+      newDay.temp = ((newDay.temp - 32) * 5) / 9;
+      newDay.tempmin = ((newDay.tempmin - 32) * 5) / 9;
+      newDay.tempmax = ((newDay.tempmax - 32) * 5) / 9;
+    } else {
+      newDay.temp = (newDay.temp * 9) / 5 + 32;
+      newDay.tempmin = (newDay.tempmin * 9) / 5 + 32;
+      newDay.tempmax = (newDay.tempmax * 9) / 5 + 32;
     }
 
-    textarea.addEventListener('blur', saveAndRender);
-    textarea.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        textarea.blur();
-      }
-    });
+    newDay.temp = Math.round(newDay.temp * 10) / 10;
+    newDay.tempmin = Math.round(newDay.tempmin * 10) / 10;
+    newDay.tempmax = Math.round(newDay.tempmax * 10) / 10;
+
+    return newDay;
   });
 }
 
-
-function makeNoteEditable(noteEl, projectKey, todoKey) {
-  noteEl.addEventListener('click', () => {
-    const ta = document.createElement('textarea');
-    ta.className = 'note-editor';
-    ta.value = createProject.getProjects()[projectKey].list[todoKey].notes || '';
-    noteEl.replaceWith(ta);
-    ta.focus();
-
-    let saved = false; // guard to prevent multiple saves
-
-    const save = () => {
-      if (saved) return;
-      saved = true;
-
-      const txt = ta.value.trim();
-      createProject.updateTodo(projectKey, todoKey, 'notes', txt);
-      ta.replaceWith(noteEl);
-      noteEl.textContent = txt || 'Click to add notes…';
-    };
-
-    ta.addEventListener('blur', save);
-    ta.addEventListener('keydown', e => {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        save();
-      }
-    });
-  });
+async function getSvgIcon(conditions){
+  const response = await fetch(`https://raw.githubusercontent.com/VisualCrossing/WeatherIcons/main/SVG/4th%20Set%20-%20Monochrome/${conditions}.svg`,{mode:'cors'});
+  const icon = await response.text();
+  return icon
 }
+function renderWeatherInfo(week){
 
-function renderProjects() {
-  const projects = createProject.getProjects();
-  projectList.innerHTML = '';
+  getSvgIcon(week[0].icon).then(oldicon =>{
+    const newicon=oldicon.replace(/<style[\s\S]*?<\/style>/gi, '');
+    today.innerHTML = `
+          <div class="weather-today">
+            <div class="weather-icon">
+              ${newicon}
+            </div>
+            <div class="weather-info">
+              <div class="temp-main">
+                ${week[0].temp}<span style="font-size: 0.6em;"> °${currentUnit}</span>
+              </div>
+              <div class="temp-range">
+                H: ${week[0].tempmax}<span style="font-size: 0.7em; opacity: 0.7;"> °${currentUnit}</span> /
+                L: ${week[0].tempmin}<span style="font-size: 0.7em; opacity: 0.7;"> °${currentUnit}</span>
+              </div>
+              <div class="condition">${week[0].conditions}</div>
+              <div class="date">${week[0].datetime}</div>
+            </div>
+          </div>
+        `})
+      rest.innerHTML='';
+      week.slice(1).forEach(day => {
+        getSvgIcon(day.icon).then( oldicon=>{
+          console.log(oldicon)
+          const newicon=oldicon.replace(/<style[\s\S]*?<\/style>/gi, '');
+          const dayHTML  = `
+            <div class="weather-card">
+              <div class="weather-icon-sm">
+                ${newicon}
+              </div>
+              <div class="weather-details-sm">
+                <div class="temp-sm">
+                  ${day.temp}<span style="font-size: 0.6em; opacity: 0.7;">°${currentUnit}</span>
+                </div>
+                <div class="date-sm">${day.datetime}</div>
+              </div>
+            </div>
+          `;
+          rest.innerHTML += dayHTML;
+})})
+    console.log(week)
+};
 
-  Object.keys(projects).forEach((key) => {
-    const project = projects[key];
-
-    const li = document.createElement('li');
-
-    const btn = document.createElement('button');
-    btn.className = 'project-name-btn';
-    btn.innerHTML = `
-      <span class="project-name-text">${key}</span>
-      <svg class="edit-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1.003 1.003 0 0 0 0-1.42l-2.34-2.34a1.003 1.003 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"/>
-      </svg>
-      <svg class="delete-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-        <path d="M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z M15.5,4L14.5,3H9.5L8.5,4H5V6H19V4Z" />
-      </svg>
-    `;
-
-    // Edit project name
-    btn.querySelector('.edit-icon').addEventListener('click', (e) => {
-      e.stopPropagation();
-      const input = document.createElement('input');
-      input.type = 'text';
-      input.value = key;
-      input.className = 'project-rename-input';
-      li.innerHTML = '';
-      li.appendChild(input);
-      input.focus();
-
-      const save = () => {
-        const newKey = input.value.trim();
-        if (!newKey || newKey === key) return renderProjects();
-        createProject.updateKey(key, newKey);
-        titleHeader.textContent = newKey;
-        renderProjects();
-      };
-
-      input.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') save();
-      });
-      input.addEventListener('blur', save);
-    });
-
-    // Delete project
-    btn.querySelector('.delete-icon').addEventListener('click', (e) => {
-      e.stopPropagation();
-      const wasActive = titleHeader.textContent === key;
-
-      createProject.deleteProject(key);
-      renderProjects();
-
-      const projects = createProject.getProjects();
-      const remainingKeys = Object.keys(projects);
-
-      if (wasActive && remainingKeys.length > 0) {
-        const nextKey = remainingKeys[0];
-        titleHeader.textContent = nextKey;
-
-        contentSection.innerHTML = `
-          <h3>Description</h3>
-          <p id="project-description" class="editable">${projects[nextKey].description}</p>
-        `;
-        const descEl = document.getElementById('project-description');
-        makeDescEditable(descEl, nextKey);
-        renderTodos(nextKey);
-      } else {
-        titleHeader.textContent = '';
-        contentSection.innerHTML = '';
-      }
-    });
-
-    // Select project on click
-    btn.addEventListener('click', () => {
-      titleHeader.textContent = key;
-      localStorage.setItem('lastProject', key);
-
-      contentSection.innerHTML = `
-        <h3>Description</h3>
-        <p id="project-description" class="editable">${project.description}</p>
-      `;
-      makeDescEditable(document.getElementById('project-description'), key);
-      renderTodos(key);
-    });
-
-    li.appendChild(btn);
-    projectList.appendChild(li);
-  });
-}
-
-// ---------------- Render Todos ----------------
-function renderTodos(projectKey) {
-  const project = createProject.getProjects()[projectKey];
-  let todoList = contentSection.querySelector('.todo-list');
-
-  if (!todoList) {
-    todoList = document.createElement('ul');
-    todoList.className = 'todo-list';
-    contentSection.appendChild(todoList);
-  }
-
-  todoList.innerHTML = '';
-
-  for (const [title, todo] of Object.entries(project.list)) {
-    const li = document.createElement('li');
-    li.className = `todo-item priority-${todo.priority.toLowerCase()}`;
-
-    li.innerHTML = `
-      <div class="todo-line">
-        <div class="todo-title-group">
-          <span class="todo-title">${title}</span>
-          <span class="todo-date small-date">${todo.dueDate}</span>
-        </div>
-      </div>
-      <div class="todo-details hidden">
-        <div class="expanded-date-wrapper">
-          <p class="expanded-date"><strong>Due:</strong> <span class="due-text">${todo.dueDate}</span></p>
-          <button class="date-edit-btn" title="Edit Due Date">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22" width="16" height="16" fill="currentColor">
-        <path d="M19 20H3V19H2V3H3V2H5V0H7V2H15V0H17V2H19V3H20V19H19V20M4 4V6H18V4H4M4 8V18H18V8H4M12 12H16V16H12V12Z"/>
-      </svg>
-    </button>
-        </div>
-        <label><strong>Priority:</strong> 
-          <select class="priority-select">
-            <option value="Low" ${todo.priority === 'Low' ? 'selected' : ''}>Low</option>
-            <option value="Medium" ${todo.priority === 'Medium' ? 'selected' : ''}>Medium</option>
-            <option value="High" ${todo.priority === 'High' ? 'selected' : ''}>High</option>
-          </select>
-        </label>
-        <h3><strong>Notes</h3>
-        <p class="todo-note editable">${todo.notes || 'Click to add notes…'}</p>
-      </div>
-    `;
-
-    // Toggle show/hide
-    li.querySelector('.todo-line').addEventListener('click', () => {
-      li.querySelector('.todo-details').classList.toggle('hidden');
-    });
-
-    // Editable note
-    makeNoteEditable(li.querySelector('.todo-note'), projectKey, title);
-
-    // Priority change
-    li.querySelector('.priority-select').addEventListener('change', (e) => {
-      const newPriority = e.target.value;
-      createProject.updateTodo(projectKey, title, 'priority', newPriority);
-      li.className = `todo-item priority-${newPriority.toLowerCase()}`;
-    });
-
-    // Date edit
-    li.querySelector('.date-edit-btn').addEventListener('click', () => {
-      const input = document.createElement('input');
-      input.type = 'date';
-      input.className = 'date-inline-input';
-      input.min = new Date().toISOString().split("T")[0];
-
-      const wrapper = li.querySelector('.expanded-date-wrapper');
-      wrapper.appendChild(input);
-      input.focus();
-
-      const save = () => {
-        if (!input.value) {
-          wrapper.removeChild(input);
-          return;
-        }
-
-        const selectedDate = new Date(input.value);
-        const now = new Date();
-        now.setHours(0, 0, 0, 0);
-
-        if (selectedDate < now) {
-          alert("You can't set a due date in the past.");
-          wrapper.removeChild(input);
-          return;
-        }
-
-        const formatted = format(selectedDate, 'MMMM do, yyyy');
-        createProject.updateTodo(projectKey, title, 'dueDate', formatted);
-        li.querySelector('.todo-date').textContent = formatted;
-        li.querySelector('.due-text').textContent = formatted;
-        wrapper.removeChild(input);
-      };
-
-      input.addEventListener('change', save);
-      input.addEventListener('blur', save);
-    });
-
-    todoList.appendChild(li);
-  }
-}
-
-// ---------------- UI Events ----------------
-addProjectBtn.addEventListener('click', () => {
-  const name = newProjectInput.value.trim();
-  if (!name) return;
-  createProject.create(name);
-  newProjectInput.value = '';
-  renderProjects();
+toggle.addEventListener('change', () => {
+  currentUnit = toggle.checked ? 'C' : 'F';
+  const event = new KeyboardEvent('keydown', {key: 'Enter'});
+  search.dispatchEvent(event);
 });
 
-newProjectInput.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') addProjectBtn.click();
+search.addEventListener('keydown',(e)=>{
+  if(e.key=='Enter'){
+    if(search.value.trim()){
+    getWeather(search.value).then( days =>{
+      const forecast=currentUnit==='F'?days.slice(0,7):convertUnits(days.slice(0,7),currentUnit);
+      renderWeatherInfo(forecast);
+    }).catch(err => {
+        alert("Unable to retrieve weather. Please check the location and try again.");
 });
-
-addTodoBtn.addEventListener('click', () => {
-  const title = todoTitleInput.value.trim();
-  const date  = todoDateInput.value;
-  const prio  = todoPriorityInput.value;
-  const key   = titleHeader.textContent;
-
-  if (!title || !date || !prio || !key) return;
-
-  if (createProject.addTodo(key, title, date, prio, '')) {
-    todoTitleInput.value = '';
-    todoDateInput.value = '';
-    todoPriorityInput.value = '';
-    renderTodos(key);
   }
-});
-
-// ---------------- Final Render ----------------
-function renderProjectsAndSelectLast() {
-  renderProjects();
-  const last = localStorage.getItem('lastProject');
-  const keys = Object.keys(createProject.getProjects());
-
-  if (last && keys.includes(last)) {
-    document.querySelectorAll('.project-name-btn').forEach(btn => {
-      if (btn.textContent.includes(last)) btn.click();
-    });
-  } else if (keys.length > 0) {
-    document.querySelector('.project-name-btn')?.click();
   }
-}
-
-renderProjectsAndSelectLast();
+})

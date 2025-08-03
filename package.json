@@ -1,7 +1,7 @@
 {
-  "name": "todo_list",
+  "name": "weather_app",
   "version": "1.0.0",
-  "description": "",
+  "description": "A clean, simple, and interactive Todo List app built with **JavaScript**, **HTML**, and **CSS**. This app supports project management, inline editing, and local storage — all in a sleek, responsive interface.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

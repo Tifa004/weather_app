@@ -1,87 +1,38 @@
-# 📋 Todo List Project
+# 🌤️ SkyWhiz — Weather Forecast App
 
-A clean, simple, and interactive Todo List app built with **JavaScript**, **HTML**, and **CSS**. This app supports project management, inline editing, and local storage — all in a sleek, responsive interface.
+A sleek, responsive weather app that fetches 7-day forecasts using the [Visual Crossing Weather API](https://www.visualcrossing.com/), displays inline SVG weather icons, and allows live temperature unit toggling between Fahrenheit and Celsius.
 
----
+## 🔍 Features
 
-## ✨ Features
+- 🔎 Search weather by location (country or city)
+- 🌦️ Displays today's weather with:
+  - SVG weather icons
+  - Temperature, high/low, condition, and date
+- 📆 Shows 6-day forecast as weather cards
+- 🌡️ Toggle switch to change between °F and °C
+- 📱 Responsive design — mobile-friendly layout
+- ⚡ Instant feedback with `Enter` key search trigger
 
-### ✅ Core Functionality
+## 🧪 Technologies Used
 
-- **Project-based organization**  
-  Create, rename, and delete multiple projects, each with its own list of todos.
+- **HTML, CSS, JavaScript (ES6+)**
+- **Fetch API** for data and SVG icon retrieval
+- **Async/Await** for asynchronous operations
+- **DOM Manipulation** via `innerHTML`, `querySelector`, etc.
+- **CORS** mode handling
+- **Media Queries** for responsive styling
+- **Custom CSS toggle switch**
+- **SVG sanitization** using regex to remove `<style>` tags
 
-- **Todo management**
-  - Add todos with:
-    - Title
-    - Due date
-    - Priority (Low, Medium, High)
-    - Notes
-  - Edit priority, due date, and notes inline
-  - Expand/collapse todo details
-  - Delete specific todos
+## 🚀 How It Works
 
-- **Persistent data**  
-  All data is stored in **Local Storage**, so your projects and todos remain after refreshing or closing the tab.
+1. On typing a location and pressing `Enter`, a request is sent to Visual Crossing's API.
+2. Today's weather is rendered using sanitized inline SVGs.
+3. The next 6 days are shown in a forecast card layout.
+4. Toggling the unit switch re-converts temperatures and re-renders the UI.
 
----
+## 📦 Notes
 
-## 🌟 Notable Features & Highlights
-
-### 🗓️ Min Date on Date Input  
-Due dates **cannot be set in the past** — the `<input type="date">` uses today as the minimum.
-
-```js
-todoDateInput.min = new Date().toISOString().split("T")[0];
-```
-
-### 📝 Editable Project Descriptions  
-Clicking on a project description transforms it into an **inline textarea** that maintains the layout. Press `Enter` or unfocus to save changes.
-
-- Maintains the same size and styling as the original element.
-- Styled to look seamless.
-
-### ✏️ Inline Project Renaming  
-Projects can be renamed by clicking the pencil icon — editing is inline and keeps layout consistent (like a real app).
-
-### 📌 Inline Todo Notes Editing  
-Each todo item has an editable notes section:
-- Click to edit
-- Press `Enter` to save
-- Uses a fallback placeholder ("Click to add notes…") if empty
-
-### 🔧 Priority Styling  
-Each todo's border color changes based on its priority level:
-- Green for Low
-- Orange for Medium
-- Red for High
-
-### 🧠 Clean Module Pattern  
-JavaScript is organized using **Immediately Invoked Function Expressions (IIFEs)** to encapsulate state:
-- `createProject`: handles all logic for creating, updating, and deleting projects/todos
-- `storage`: saves and loads from localStorage
-
----
-
-
-## 🚀 Getting Started
-
-1. Clone or download this repo
-2. Open `index.html` in a browser
-3. Start adding projects and todos!
-
----
-
-## 🧹 Suggestions for Improvement
-
-This project is great as-is, but you could consider adding:
-
-- Drag and drop todo reordering
-- Mark todos as completed
-- Due date filtering or sorting
-- Light/dark theme toggle
-- Backend support for persistence across devices
-
----
-
-Made with ❤️ and clean modular JavaScript.
+- Temperature conversion is handled manually using the `convertUnits()` function.
+- Weather icons are fetched from GitHub-hosted SVGs and styled dynamically.
+- Error handling is in place for invalid location inputs.

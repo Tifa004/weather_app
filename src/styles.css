@@ -5,361 +5,242 @@
   padding: 0;
 }
 
-/* Body */
 body {
-  font-family: sans-serif;
-  background-color: #f8f9fa;
-}
-
-/* Container & Layout */
-.container {
-  display: flex;
+  background-image: url('./background.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
   height: 100vh;
-}
-
-.sidebar {
-  width: 22vw;
-  background-color: #fff;
-  border-right: 1px solid #ccc;
-  padding: 1rem;
+  margin: 0;
+  font-family: sans-serif;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
 }
 
-.sidebar h2 {
-  font-size: 1.4rem;
-  margin-bottom: 0.5rem;
-}
-
-/* Project List */
-.project-list {
-  list-style: none;
+#top {
+  border: 2px solid red;
+  height: 30vh;
   display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  align-items: flex-end;
+  justify-content: space-around;
+  gap: 2rem;
 }
 
-.project-list li button,
-.project-name-btn {
-  width: 100%;
-  background-color: #f2f2f2;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  padding: 8px 12px;
-  font-size: 1rem;
-  text-align: left;
-  cursor: pointer;
-  transition: background 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-  position: relative;
-  overflow: hidden;
-}
-
-.project-list li button:hover,
-.project-name-btn:hover {
-  background-color: #e0e0e0;
-}
-
-.project-name-text {
-  flex-grow: 1;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.project-name-btn svg {
-  width: 16px;
-  height: 16px;
-  fill: #555;
-  flex-shrink: 0;
-  cursor: pointer;
-  pointer-events: auto;
-}
-
-.project-name-btn svg:hover {
-  fill: #000;
-}
-
-.project-rename-input {
-  width: 100%;
-  font-size: 1rem;
-  padding: 8px 12px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  background-color: #f2f2f2;
-  outline: none;
-}
-
-/* Add Project */
-.add-project-container {
-  margin-top: auto;
-}
-
-.input-wrapper {
-  position: relative;
-  width: 100%;
-}
-
-#new-project-input {
-  width: 100%;
-  padding: 8px 2.5rem 8px 8px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  outline: none;
-  font-size: 1rem;
-}
-
-#add-project-btn {
-  position: absolute;
-  right: 0;
-  top: 0;
-  height: 100%;
-  width: 2.5rem;
-  border: none;
-  background-color: #007bff;
+#title {
+  font-size: 3rem;
   color: white;
-  font-size: 1.2rem;
-  border-top-right-radius: 6px;
-  border-bottom-right-radius: 6px;
+  text-align: center;
+  /* margin-bottom: 0.5rem; */
+  text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.6);
+}
+
+
+#search_bar {
+  border-radius: 2em;
+  padding: 0.6em 1.2em;
+  font-size: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  outline: none;
+  background: rgba(255, 255, 255, 0.2); 
+  color: #fff;
+  width: 100%;
+  min-width: 180px;
+  max-width: 300px;
+  box-shadow: inset 0 0 4px rgba(255, 255, 255, 0.1);
+  transition: box-shadow 0.3s ease, background 0.3s ease;
+}
+
+#search_bar::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+#search_bar:focus {
+  background: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+}
+
+.convert {
+  appearance: none;
+  position: relative;
+  width: 60px;
+  height: 32px;
+  border-radius: 25px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(4px);
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: background 0.3s, box-shadow 0.3s;
+  outline: none;
   cursor: pointer;
-  transition: background 0.2s ease;
 }
 
-#add-project-btn:hover {
-  background-color: #0056b3;
+.convert::after {
+  opacity: 0.7;
+  content: '°F';
+  position: absolute;
+  top: 50%;
+  left: 30%;
+  transform: translate(-50%, -50%);
+  height: 1.5rem;
+  width: 1.5rem;
+  background-color: #ffffff2a;
+  color: white;
+  font-weight: bold;
+  font-size: 0.75rem;
+  text-align: center;
+  line-height: 1.5rem;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  transition: left 0.3s, content 0.3s;
 }
 
-/* Content */
-.content {
-  flex-grow: 1;
+.convert:checked::after {
+  left: 70%;
+  content: '°C';
+}
+
+.stuff{
+  display: flex;
+  align-items: flex-end;
+}
+
+.weather-today {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.5rem 2rem;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  max-width: 500px;
+  margin: 1rem auto;
+}
+
+.weather-icon svg {
+  width: 100px;
+  height: 100px;
+  fill: none !important;
+  stroke: white !important;
+  stroke-width: 3px;
+}
+
+.weather-info {
   display: flex;
   flex-direction: column;
+  gap: 0.4rem;
 }
 
-.top {
-  border-bottom: 1px solid #ccc;
-  height: 10%;
+.temp-main {
+  font-size: 2.5rem;
+  font-weight: 600;
 }
 
-.top-inner {
+.temp-range {
+  font-size: 1rem;
+  opacity: 0.8;
+}
+
+.condition {
+  font-size: 1.1rem;
+  font-style: italic;
+}
+
+.date {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+#week {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem;
-  max-width: 100%;
+  justify-content: center;
   gap: 1rem;
-}
-
-/* Inputs */
-.inputs {
-  display: flex;
-  gap: 0.5rem;
+  padding: 1rem;
   flex-wrap: wrap;
 }
 
-.inputs input,
-.inputs select {
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-}
-
-/* Add Todo Button */
-#add_todo {
-  background-color: #28a745;
-  color: white;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-#add_todo:hover {
-  background-color: #218838;
-}
-
-/* Todo List */
-.todo-list {
-  margin-top: 1rem;
-  list-style: none;
-  padding-left: 0;
+.weather-card {
+  text-align: center;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-}
-
-/* Todo Item */
-.todo-item {
-  background-color: #fff;
-  border: 1px solid #e3e3e3;
-  border-left: 6px solid transparent;
-  padding: 0.75rem;
-  border-radius: 8px;
-  margin-bottom: 0.75rem;
-  transition: box-shadow 0.2s;
-}
-
-.todo-item:hover {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
-
-/* Priority Colors */
-.priority-low {
-  border-left-color: #4caf50;
-}
-
-.priority-medium {
-  border-left-color: #ff9800;
-}
-
-.priority-high {
-  border-left-color: #f44336;
-}
-
-/* Todo Line */
-.todo-line {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  cursor: pointer;
-}
-
-.todo-title-group {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.todo-title {
-  font-weight: 600;
-  font-size: 1.05rem;
-  color: #222;
-}
-
-.todo-date.small-date {
-  font-size: 0.75rem;
-  color: #888;
-  margin-top: 2px;
-  margin-left: 2px;
-}
-
-/* Todo Details */
-.todo-details {
-  margin-top: 0.5rem;
-  padding-top: 0.5rem;
-  border-top: 1px solid #eee;
-  font-size: 0.95rem;
-  color: #333;
-}
-
-.todo-details.hidden {
-  display: none;
-}
-
-/* Expanded Date */
-.expanded-date-wrapper {
-  display: flex;
-  gap: 0.5rem;
   align-items: center;
-  margin-bottom: 0.5rem;
-}
-
-.expanded-date {
-  font-weight: bold;
-  font-size: 0.9rem;
-  color: #444;
-  margin-bottom: 0;
-}
-
-/* Date Edit Button */
-.date-edit-btn {
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  color: #666;
-  transition: color 0.2s;
-  display: flex;
-  align-items: center;
-}
-
-.date-edit-btn:hover {
-  color: #000;
-}
-
-/* Date Inline Input */
-.date-inline-input {
-  font-size: 0.9rem;
-  padding: 2px 4px;
-  border: 1px solid #aaa;
-  border-radius: 4px;
-}
-
-/* Note Editing */
-.todo-note {
-  margin-top: 0.5rem;
-  background-color: #f8f8f8;
-  padding: 0.5rem;
-  border-radius: 6px;
-  border: 1px solid #ddd;
-  font-size: 0.95rem;
-  color: #444;
-  cursor: pointer;
-  white-space: pre-wrap;
-  font-style: italic;
-  transition: background-color 0.2s;
-}
-
-.todo-note.editable:hover {
-  background-color: #f0f0f0;
-}
-
-.note-editor {
-  width: 100%;
-  min-height: 3rem;
-  margin-top: 0.5rem;
-  padding: 0.5rem;
-  border-radius: 4px;
-  font-size: 0.95rem;
-  border: 1px solid #ccc;
-}
-
-/* Priority Select Dropdown */
-.priority-select {
-  margin-top: 0.25rem;
-  padding: 0.25rem;
-  font-size: 0.9rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-/* Description Section */
-.description {
+  background: rgba(255, 255, 255, 0.08);
   padding: 1rem;
-  background-color: #fefefe;
-  border-radius: 12px;
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
-  margin-top: 1rem;
+  border-radius: 1rem;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(4px);
+  transition: transform 0.2s ease;
 }
 
-.description h3 {
-  margin-bottom: 0.5rem;
-  font-size: 1.2rem;
-  color: #333;
+.weather-card:hover {
+  transform: translateY(-4px);
 }
 
-#project-description {
-  font-size: 1rem;
-  line-height: 1.6;
-  color: #555;
-  background-color: #f9f9f9;
-  padding: 0.75rem;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  cursor: pointer;
+.weather-icon-sm svg {
+  width: 40px;
+  height: 40px;
+  fill: none !important;
+  stroke: white !important;
+  stroke-width: 3px;
+}
+
+.temp-sm {
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+.date-sm {
+  font-size: 0.9rem;
+  margin-top: 0.3rem;
+  opacity: 0.8;
+}
+
+@media (max-width: 768px) {
+  #top {
+    flex-direction: column;
+    align-items: center;
+    height: auto;
+    gap: 1rem;
+  }
+
+  #title {
+    font-size: clamp(1.8rem, 6vw, 3rem);
+    text-align: center;
+  }
+
+  #search_bar {
+    width: 90%;
+    max-width: none;
+    min-width: 180px;
+  }
+
+  .weather-today {
+    flex-direction: column;
+    text-align: center;
+    padding: 1rem;
+  }
+
+  .weather-icon svg {
+    width: 80px;
+    height: 80px;
+  }
+
+  .temp-main {
+    font-size: 2rem;
+  }
+
+  #week {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .weather-card {
+    width: 80%;
+  }
+
+  .convert {
+    margin-top: 1rem;
+  }
 }

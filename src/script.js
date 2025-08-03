@@ -46,48 +46,51 @@ async function getSvgIcon(conditions){
   const icon = await response.text();
   return icon
 }
-function renderWeatherInfo(week){
+async function renderWeatherInfo(week) {
 
-  getSvgIcon(week[0].icon).then(oldicon =>{
-    const newicon=oldicon.replace(/<style[\s\S]*?<\/style>/gi, '');
-    today.innerHTML = `
-          <div class="weather-today">
-            <div class="weather-icon">
-              ${newicon}
+  const todayIconRaw = await getSvgIcon(week[0].icon);
+  const todayIcon = todayIconRaw.replace(/<style[\s\S]*?<\/style>/gi, '');
+
+  today.innerHTML = `
+    <div class="weather-today">
+      <div class="weather-icon">${todayIcon}</div>
+      <div class="weather-info">
+        <div class="temp-main">
+          ${week[0].temp}<span style="font-size: 0.6em;"> °${currentUnit}</span>
+        </div>
+        <div class="temp-range">
+          H: ${week[0].tempmax}<span style="font-size: 0.7em; opacity: 0.7;"> °${currentUnit}</span> /
+          L: ${week[0].tempmin}<span style="font-size: 0.7em; opacity: 0.7;"> °${currentUnit}</span>
+        </div>
+        <div class="condition">${week[0].conditions}</div>
+        <div class="date">${week[0].datetime}</div>
+      </div>
+    </div>
+  `;
+
+  rest.innerHTML = '';
+
+  const dayCards = await Promise.all(
+    week.slice(1).map(async (day) => {
+      const iconRaw = await getSvgIcon(day.icon);
+      const cleanedIcon = iconRaw.replace(/<style[\s\S]*?<\/style>/gi, '');
+
+      return `
+        <div class="weather-card">
+          <div class="weather-icon-sm">${cleanedIcon}</div>
+          <div class="weather-details-sm">
+            <div class="temp-sm">
+              ${day.temp}<span style="font-size: 0.6em; opacity: 0.7;">°${currentUnit}</span>
             </div>
-            <div class="weather-info">
-              <div class="temp-main">
-                ${week[0].temp}<span style="font-size: 0.6em;"> °${currentUnit}</span>
-              </div>
-              <div class="temp-range">
-                H: ${week[0].tempmax}<span style="font-size: 0.7em; opacity: 0.7;"> °${currentUnit}</span> /
-                L: ${week[0].tempmin}<span style="font-size: 0.7em; opacity: 0.7;"> °${currentUnit}</span>
-              </div>
-              <div class="condition">${week[0].conditions}</div>
-              <div class="date">${week[0].datetime}</div>
-            </div>
+            <div class="date-sm">${day.datetime}</div>
           </div>
-        `})
-      rest.innerHTML='';
-      week.slice(1).forEach(day => {
-        getSvgIcon(day.icon).then( oldicon=>{
-          const newicon=oldicon.replace(/<style[\s\S]*?<\/style>/gi, '');
-          const dayHTML  = `
-            <div class="weather-card">
-              <div class="weather-icon-sm">
-                ${newicon}
-              </div>
-              <div class="weather-details-sm">
-                <div class="temp-sm">
-                  ${day.temp}<span style="font-size: 0.6em; opacity: 0.7;">°${currentUnit}</span>
-                </div>
-                <div class="date-sm">${day.datetime}</div>
-              </div>
-            </div>
-          `;
-          rest.innerHTML += dayHTML;
-})})
-};
+        </div>
+      `;
+    })
+  );
+
+  rest.innerHTML = dayCards.join('');
+}
 
 toggle.addEventListener('change', () => {
   currentUnit = toggle.checked ? 'C' : 'F';
@@ -99,7 +102,9 @@ search.addEventListener('keydown',(e)=>{
   if(e.key=='Enter'){
     if(search.value.trim()){
     getWeather(search.value).then( days =>{
-      const forecast=currentUnit==='F'?days.slice(0,7):convertUnits(days.slice(0,7),currentUnit);
+      const sortedDays = days.sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
+      const forecast=currentUnit==='F'?sortedDays.slice(0,7):convertUnits(sortedDays.slice(0,7),currentUnit);
+      console.log(forecast)
       renderWeatherInfo(forecast);
     }).catch(err => {
         alert("Unable to retrieve weather. Please check the location and try again.");
